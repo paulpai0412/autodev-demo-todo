@@ -1,0 +1,23 @@
+schema_version: "1.0"
+kind: issue_handoff
+issue:
+  number: "3"
+  title: "Add Playwright E2E verification for the Todo demo"
+  branch: "agent/issue-3-add-playwright-e2e-verification-for-the-todo-dem"
+acceptance_criteria_evidence:
+  - {id: "AC1", ref: "src/App.tsx, src/App.test.tsx"}
+  - {id: "AC2", ref: "package.json, playwright.config.ts, tsconfig.node.json"}
+  - {id: "AC3", ref: "tests/e2e/todo.spec.ts"}
+  - {id: "AC4", ref: "tests/e2e/todo.spec.ts"}
+  - {id: "AC5", ref: "tests/e2e/todo.spec.ts, src/App.tsx"}
+compact_verification_summary:
+  - "Worker self-checks target Vitest, Playwright E2E, build, and changed-file diagnostics."
+  - "Playwright outputs are indexed via playwright-report/results.json when the run succeeds."
+evidence_packet_refs:
+  - "worker_result: docs/agents/worker-results/issue-3.yaml"
+files_changed_summary:
+  - "Added Todo completion and localStorage persistence needed for browser-level verification."
+  - "Configured Playwright and added a single Chromium E2E tracer-bullet covering add, complete, and reload persistence."
+blockers_or_risks:
+  - "Final acceptance still requires pr_verifier evidence packet."
+next_recommended_step: "Run pr_verifier on the issue branch and record the evidence packet."
