@@ -1,0 +1,141 @@
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.todo-panel {
+  width: min(100%, 42rem);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: rgba(15, 23, 42, 0.88);
+  color: #f8fafc;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+  display: grid;
+  gap: 1.5rem;
+}
+
+.hero-copy {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.75rem;
+  color: #38bdf8;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 3.75rem);
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  color: #cbd5e1;
+  text-wrap: pretty;
+}
+
+.todo-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.field-label,
+.list-header h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.composer-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+}
+
+.composer-row input {
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 999px;
+  padding: 0.95rem 1.1rem;
+  background: rgba(15, 23, 42, 0.7);
+  color: #f8fafc;
+}
+
+.composer-row input::placeholder {
+  color: #64748b;
+}
+
+.composer-row button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.95rem 1.25rem;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: #082f49;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.todo-list-section {
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  padding-top: 1.5rem;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.list-header h2 {
+  margin: 0;
+}
+
+.list-count {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.todo-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.todo-empty-state {
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.72);
+  color: #94a3b8;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.72);
+}
+
+.todo-item + .todo-item {
+  margin-top: 0.75rem;
+}
+
+.todo-bullet {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #38bdf8, #22d3ee);
+  box-shadow: 0 0 0 0.3rem rgba(34, 211, 238, 0.12);
+}
+
+@media (max-width: 640px) {
+  .composer-row {
+    grid-template-columns: 1fr;
+  }
+}
