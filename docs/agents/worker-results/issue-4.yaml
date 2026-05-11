@@ -49,7 +49,7 @@ verification:
 
 evidence_packet_refs:
   worker_artifact_bundle: ""
-  verifier_packet: "docs/agents/evidence/issue-4-pr-<pr-number>.yaml"
+  verifier_packet: "docs/agents/evidence/issue-4-pr-5.yaml"
   raw_evidence_policy: "stored_outside_main_agent_context"
 
 role_boundary:
@@ -60,9 +60,9 @@ role_boundary:
   verifier_packet_required_for_completion: true
 
 pr:
-  number: "none"
-  url: ""
-  ready_for_review: false
+  number: "5"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/pull/5"
+  ready_for_review: true
 
 blockers:
   - "none"
@@ -71,7 +71,7 @@ next_recommended_step: "Run pr_verifier against the branch/PR and publish the ev
 
 handoff:
   repo_path: "docs/agents/handoffs/issue-4.yaml"
-  github_summary_posted: false
+  github_summary_posted: true
 
 metadata:
   worker: "Sisyphus-Junior"

@@ -15,6 +15,7 @@ compact_verification_summary:
   - "Changed-file diagnostics clean."
 evidence_packet_refs:
   - "worker_result: docs/agents/worker-results/issue-4.yaml"
+  - "pull_request: https://github.com/paulpai0412/autodev-demo-todo/pull/5"
 files_changed_summary:
   - "Added Vite React TypeScript Todo app with add-todo flow."
   - "Documented local run steps and replay artifact refs."
