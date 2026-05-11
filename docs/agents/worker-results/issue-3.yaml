@@ -60,9 +60,9 @@ role_boundary:
   verifier_packet_required_for_completion: true
 
 pr:
-  number: ""
-  url: ""
-  ready_for_review: false
+  number: "6"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/pull/6"
+  ready_for_review: true
 
 blockers:
   - "none"
@@ -76,4 +76,4 @@ handoff:
 metadata:
   worker: "Sisyphus-Junior"
   worker_session_id: "local-session"
-  completed_at: "2026-05-11T22:10:00+08:00"
+  completed_at: "2026-05-11T22:15:00+08:00"
