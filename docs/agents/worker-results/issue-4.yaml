@@ -1,0 +1,79 @@
+schema_version: "1.0"
+kind: worker_result
+line_cap: 80
+raw_evidence_policy: index_only_refs_no_raw_logs_or_transcripts
+
+issue:
+  number: "4"
+  title: "Scaffold the Todo demo app and implement add-todo flow"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/issues/4"
+
+branch: "agent/issue-4-scaffold-the-todo-demo-app-and-implement-add-tod"
+status: "success"
+failure_classification: {kind: "none", retryable: true, routed_to: "pr_verifier", root_cause_signature: "none"}
+
+summary:
+  objective: "Scaffold the Todo demo app and implement add-todo flow."
+  outcome: "Added a Vite React TypeScript Todo app, shipped the add-todo UI flow, documented local run steps, and preserved compact replay artifacts."
+
+files_changed:
+  - {path: ".gitignore", summary: "Ignored generated app and runtime artifacts."}
+  - {path: "package.json", summary: "Declared Vite/React/TypeScript/Vitest app dependencies and scripts."}
+  - {path: "tsconfig.app.json", summary: "Enabled strict TS app settings and Vitest globals."}
+  - {path: "vite.config.ts", summary: "Configured React and Vitest jsdom test environment."}
+  - {path: "src/App.tsx", summary: "Implemented Todo UI shell and add-todo behavior."}
+  - {path: "src/App.test.tsx", summary: "Covered shell rendering and add-todo public flow."}
+  - {path: "README.md", summary: "Documented local run/build/test steps and replay refs."}
+  - {path: "docs/agents/handoffs/issue-4.yaml", summary: "Recorded compact handoff summary for verifier."}
+
+test_case_repair:
+  applies: false
+  test_case_id: ""
+  attempted_target_case: false
+  repaired_categories: ["none"]
+  failure_signature: "none"
+  assertion_changed: false
+  expected_outcome_changed: false
+
+verification:
+  note: "Worker self-checks support implementation feedback only; final acceptance comes from the verifier evidence packet."
+  gates:
+    tdd_gate: "pass"
+    implementation_self_check_gate: "pass"
+    git_gate: "pass"
+  implementation_self_checks:
+    - {command: "npm test", result: "pass", evidence_ref: "local", summary: "Vitest passed shell and add-todo flow coverage."}
+    - {command: "npm run build", result: "pass", evidence_ref: "local", summary: "TypeScript compile and Vite production build succeeded."}
+    - {command: "lsp_diagnostics changed files", result: "pass", evidence_ref: "local", summary: "Changed TS/config files reported clean diagnostics."}
+  final_acceptance_claim: false
+
+evidence_packet_refs:
+  worker_artifact_bundle: ""
+  verifier_packet: "docs/agents/evidence/issue-4-pr-5.yaml"
+  raw_evidence_policy: "stored_outside_main_agent_context"
+
+role_boundary:
+  actor_role: "issue_worker"
+  may_execute_implementation_self_checks: true
+  may_execute_final_acceptance_qa: false
+  may_emit_final_verification: false
+  verifier_packet_required_for_completion: true
+
+pr:
+  number: "5"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/pull/5"
+  ready_for_review: true
+
+blockers:
+  - "none"
+
+next_recommended_step: "Run pr_verifier against the branch/PR and publish the evidence packet."
+
+handoff:
+  repo_path: "docs/agents/handoffs/issue-4.yaml"
+  github_summary_posted: true
+
+metadata:
+  worker: "Sisyphus-Junior"
+  worker_session_id: "local-session"
+  completed_at: "2026-05-11T20:00:08+08:00"

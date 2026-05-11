@@ -1,0 +1,24 @@
+schema_version: "1.0"
+kind: issue_handoff
+issue:
+  number: "4"
+  title: "Scaffold the Todo demo app and implement add-todo flow"
+  branch: "agent/issue-4-scaffold-the-todo-demo-app-and-implement-add-tod"
+acceptance_criteria_evidence:
+  - {id: "AC1", ref: "package.json, vite.config.ts, tsconfig*.json"}
+  - {id: "AC2", ref: "src/App.tsx, src/App.css"}
+  - {id: "AC3", ref: "src/App.tsx, src/App.test.tsx"}
+  - {id: "AC4", ref: "README.md"}
+  - {id: "AC5", ref: "docs/agents/issue-packets/issue-4.yaml, docs/agents/worker-results/issue-4.yaml, docs/agents/runtime/context-checkpoint.yaml"}
+compact_verification_summary:
+  - "Worker self-checks: npm test pass; npm run build pass."
+  - "Changed-file diagnostics clean."
+evidence_packet_refs:
+  - "worker_result: docs/agents/worker-results/issue-4.yaml"
+  - "pull_request: https://github.com/paulpai0412/autodev-demo-todo/pull/5"
+files_changed_summary:
+  - "Added Vite React TypeScript Todo app with add-todo flow."
+  - "Documented local run steps and replay artifact refs."
+blockers_or_risks:
+  - "Final acceptance still requires pr_verifier evidence packet."
+next_recommended_step: "Run pr_verifier on the issue branch and record the evidence packet."
