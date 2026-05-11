@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.DS_Store
+.opencode/node_modules/
+.opencode/package.json
+.opencode/package-lock.json
+.opencode/runtime/orchestrator-ledger.json
+.opencode/runtime/issue-locks/
+.opencode/runtime/control-plane.sqlite3
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
