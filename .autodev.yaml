@@ -1,0 +1,22 @@
+schema_version: "1.0"
+
+project:
+  name: autodev-demo-todo
+  root: /home/timmypai/apps/autodev-demo-todo
+  github_repo: paulpai0412/autodev-demo-todo
+
+context:
+  required_reads:
+    - AGENTS.md
+    - CONTEXT.md
+    - docs/agents/domain.md
+    - docs/agents/issue-tracker.md
+    - docs/agents/triage-labels.md
+
+artifacts:
+  issue_packets: docs/agents/issue-packets
+  handoffs: docs/agents/handoffs
+  worker_results: docs/agents/worker-results
+  evidence: docs/agents/evidence
+  release_results: docs/agents/release-results
+  runtime: .opencode/runtime
