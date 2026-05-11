@@ -3,6 +3,10 @@ import userEvent from '@testing-library/user-event';
 import App from './App';
 
 describe('Todo app shell', () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
   it('renders the todo composer and list scaffold', () => {
     render(<App />);
 
@@ -23,5 +27,47 @@ describe('Todo app shell', () => {
     expect(screen.getByText('Ship the first tracer bullet')).toBeInTheDocument();
     expect(screen.getByText(/1 item/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/todo title/i)).toHaveValue('');
+  });
+
+  it('marks a todo complete from the public list flow', async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Verify complete-todo behavior');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    const todoToggle = screen.getByRole('checkbox', {
+      name: /verify complete-todo behavior/i,
+    });
+
+    expect(todoToggle).not.toBeChecked();
+
+    await user.click(todoToggle);
+
+    expect(todoToggle).toBeChecked();
+  });
+
+  it('reloads persisted todo state from local storage', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Persist this todo across reloads');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: /persist this todo across reloads/i,
+      }),
+    );
+
+    unmount();
+    render(<App />);
+
+    expect(screen.getByText('Persist this todo across reloads')).toBeInTheDocument();
+    expect(
+      screen.getByRole('checkbox', {
+        name: /persist this todo across reloads/i,
+      }),
+    ).toBeChecked();
   });
 });
