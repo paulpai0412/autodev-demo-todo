@@ -1,10 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './App.css';
 
+type Todo = {
+  id: string;
+  title: string;
+  completed: boolean;
+};
+
+const TODOS_STORAGE_KEY = 'autodev-demo-todos';
+
+const loadTodos = (): Todo[] => {
+  const storedTodos = window.localStorage.getItem(TODOS_STORAGE_KEY);
+
+  if (!storedTodos) {
+    return [];
+  }
+
+  try {
+    const parsedTodos = JSON.parse(storedTodos) as Todo[];
+
+    return parsedTodos.filter((todo) => typeof todo.title === 'string' && typeof todo.completed === 'boolean');
+  } catch {
+    return [];
+  }
+};
+
 function App() {
   const [draft, setDraft] = useState('');
-  const [todos, setTodos] = useState<string[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(() => loadTodos());
+
+  useEffect(() => {
+    window.localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify(todos));
+  }, [todos]);
 
   const addTodo = () => {
     const nextTodo = draft.trim();
@@ -13,9 +41,24 @@ function App() {
       return;
     }
 
-    setTodos((currentTodos) => [...currentTodos, nextTodo]);
+    setTodos((currentTodos) => [
+      ...currentTodos,
+      {
+        id: crypto.randomUUID(),
+        title: nextTodo,
+        completed: false,
+      },
+    ]);
     setDraft('');
   };
+
+  const toggleTodo = (id: string) => {
+    setTodos((currentTodos) =>
+      currentTodos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)),
+    );
+  };
+
+  const completedCount = todos.filter((todo) => todo.completed).length;
 
   return (
     <main className="app-shell">
@@ -53,16 +96,26 @@ function App() {
         <section className="todo-list-section" aria-labelledby="todo-list-heading">
           <div className="list-header">
             <h2 id="todo-list-heading">Current list</h2>
-            <span className="list-count">{todos.length} item{todos.length === 1 ? '' : 's'}</span>
+            <span className="list-count">
+              {todos.length} item{todos.length === 1 ? '' : 's'}
+              {todos.length > 0 ? ` · ${completedCount} complete` : ''}
+            </span>
           </div>
           <ul aria-label="Todo items" className="todo-list">
             {todos.length === 0 ? (
               <li className="todo-empty-state">Your first todo will appear here.</li>
             ) : (
               todos.map((todo) => (
-                <li className="todo-item" key={todo}>
+                <li className={`todo-item${todo.completed ? ' todo-item-complete' : ''}`} key={todo.id}>
                   <span className="todo-bullet" aria-hidden="true" />
-                  <span>{todo}</span>
+                  <label className="todo-item-label">
+                    <input
+                      checked={todo.completed}
+                      onChange={() => toggleTodo(todo.id)}
+                      type="checkbox"
+                    />
+                    <span>{todo.title}</span>
+                  </label>
                 </li>
               ))
             )}

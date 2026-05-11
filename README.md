@@ -18,13 +18,20 @@ Todo demo app used as an `autodev` consumer-project tracer bullet.
 
 3. Open the local URL printed by Vite to exercise the add-todo flow.
 
+## E2E verification
+
+- Install the Playwright browser once: `npx playwright install chromium`
+- Run the end-to-end check: `npm run test:e2e`
+
 ## Worker feedback checks
 
 - `npm test`
+- `npm run test:e2e`
 - `npm run build`
 
 ## Demo artifact refs
 
-- Issue packet: `docs/agents/issue-packets/issue-4.yaml`
-- Worker result: `docs/agents/worker-results/issue-4.yaml`
+- Worker result: `docs/agents/worker-results/issue-3.yaml`
+- Handoff: `docs/agents/handoffs/issue-3.yaml`
+- Playwright result index: `playwright-report/results.json`
 - Runtime checkpoint: `docs/agents/runtime/context-checkpoint.yaml`
