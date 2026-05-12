@@ -58,6 +58,10 @@ function App() {
     );
   };
 
+  const removeTodo = (id: string) => {
+    setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
+  };
+
   const completedCount = todos.filter((todo) => todo.completed).length;
 
   return (
@@ -116,6 +120,15 @@ function App() {
                     />
                     <span>{todo.title}</span>
                   </label>
+                  <button 
+                    type="button" 
+                    className="todo-remove-button" 
+                    onClick={() => removeTodo(todo.id)}
+                    aria-label={`Remove todo: ${todo.title}`}
+                    title="Remove todo"
+                  >
+                    ×
+                  </button>
                 </li>
               ))
             )}

@@ -149,6 +149,29 @@ h1 {
   box-shadow: 0 0 0 0.3rem rgba(34, 197, 94, 0.12);
 }
 
+.todo-remove-button {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 1.25rem;
+  padding: 0;
+  margin-left: auto;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.todo-remove-button:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
 .todo-item + .todo-item {
   margin-top: 0.75rem;
 }
