@@ -1,0 +1,65 @@
+schema_version: "1.0"
+kind: worker_result
+line_cap: 80
+raw_evidence_policy: index_only_refs_no_raw_logs_or_transcripts
+
+issue:
+  number: "9"
+  title: "Add clear-completed flow to the Todo demo"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/issues/9"
+
+branch: "agent/issue-9-add-clear-completed-flow-to-the-todo-demo"
+status: "success"
+failure_classification: {kind: "none", retryable: true, routed_to: "pr_verifier", root_cause_signature: "none"}
+
+summary:
+  objective: "Add a clear-completed action so the Todo demo can remove all finished items in one step while leaving active work untouched."
+  outcome: "Added a conditional clear-completed action, removed completed todos without touching active ones, persisted the cleared list, and kept filter counts plus reload behavior coherent."
+
+files_changed:
+  - {path: "src/App.tsx", summary: "Added the clear-completed action and wired it to remove only completed todos from the list state."}
+  - {path: "src/App.test.tsx", summary: "Added a public-flow test covering action visibility, clear behavior, persistence, reload, and coherent filter counts."}
+  - {path: "src/App.css", summary: "Styled the clear-completed action to match the existing todo panel controls."}
+
+verification:
+  note: "Worker self-checks support implementation feedback only; final acceptance comes from the verifier evidence packet."
+  gates:
+    tdd_gate: "pass"
+    implementation_self_check_gate: "pass"
+    git_gate: "pass"
+  implementation_self_checks:
+    - {command: "npm test", result: "pass", evidence_ref: "/tmp/opencode/autodev-demo-todo-issue-9", summary: "Vitest passed 7 tests, including the clear-completed interaction flow and existing todo behaviors."}
+    - {command: "npm run build", result: "pass", evidence_ref: "/tmp/opencode/autodev-demo-todo-issue-9", summary: "TypeScript compilation and the Vite production build succeeded on the issue-9 branch."}
+    - {command: "npm run test:e2e", result: "pass", evidence_ref: "/tmp/opencode/autodev-demo-todo-issue-9", summary: "Playwright passed the existing Todo demo browser flow on the issue-9 branch after the clear-completed changes."}
+  final_acceptance_claim: false
+
+pr:
+  number: "13"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/pull/13"
+  ready_for_review: true
+
+blockers:
+  - "none"
+
+next_recommended_step: "Run pr_verifier against PR #13 and publish the evidence packet."
+
+evidence_packet_refs:
+  worker_artifact_bundle: "/tmp/opencode/autodev-demo-todo-issue-9"
+  verifier_packet: ""
+  raw_evidence_policy: "stored_outside_main_agent_context"
+
+role_boundary:
+  actor_role: "issue_worker"
+  may_execute_implementation_self_checks: true
+  may_execute_final_acceptance_qa: false
+  may_emit_final_verification: false
+  verifier_packet_required_for_completion: true
+
+handoff:
+  repo_path: "docs/agents/handoffs/issue-9.yaml"
+  github_summary_posted: false
+
+metadata:
+  worker: "Sisyphus"
+  worker_session_id: "local-session"
+  completed_at: "2026-05-12T19:38:41+08:00"
