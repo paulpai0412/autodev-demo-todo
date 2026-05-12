@@ -26,9 +26,12 @@ const loadTodos = (): Todo[] => {
   }
 };
 
+type FilterType = 'all' | 'active' | 'completed';
+
 function App() {
   const [draft, setDraft] = useState('');
   const [todos, setTodos] = useState<Todo[]>(() => loadTodos());
+  const [filter, setFilter] = useState<FilterType>('all');
 
   useEffect(() => {
     window.localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify(todos));
@@ -63,6 +66,12 @@ function App() {
   };
 
   const completedCount = todos.filter((todo) => todo.completed).length;
+
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === 'active') return !todo.completed;
+    if (filter === 'completed') return todo.completed;
+    return true;
+  });
 
   return (
     <main className="app-shell">
@@ -100,16 +109,59 @@ function App() {
         <section className="todo-list-section" aria-labelledby="todo-list-heading">
           <div className="list-header">
             <h2 id="todo-list-heading">Current list</h2>
+            <div className="filter-controls" role="radiogroup" aria-label="Todo filters">
+              <label>
+                <input
+                  type="radio"
+                  name="filter"
+                  value="all"
+                  checked={filter === 'all'}
+                  onChange={() => setFilter('all')}
+                />
+                All
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="filter"
+                  value="active"
+                  checked={filter === 'active'}
+                  onChange={() => setFilter('active')}
+                />
+                Active
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="filter"
+                  value="completed"
+                  checked={filter === 'completed'}
+                  onChange={() => setFilter('completed')}
+                />
+                Completed
+              </label>
+            </div>
             <span className="list-count">
-              {todos.length} item{todos.length === 1 ? '' : 's'}
-              {todos.length > 0 ? ` · ${completedCount} complete` : ''}
+              {filter === 'all' && (
+                <>{todos.length} item{todos.length === 1 ? '' : 's'}{todos.length > 0 ? ` · ${completedCount} complete` : ''}</>
+              )}
+              {filter === 'active' && (
+                <>{filteredTodos.length} item{filteredTodos.length === 1 ? '' : 's'} active</>
+              )}
+              {filter === 'completed' && (
+                <>{filteredTodos.length} item{filteredTodos.length === 1 ? '' : 's'} completed</>
+              )}
             </span>
           </div>
           <ul aria-label="Todo items" className="todo-list">
-            {todos.length === 0 ? (
-              <li className="todo-empty-state">Your first todo will appear here.</li>
+            {filteredTodos.length === 0 ? (
+              <li className="todo-empty-state">
+                {filter === 'all' 
+                  ? 'Your first todo will appear here.'
+                  : `No ${filter} todos found.`}
+              </li>
             ) : (
-              todos.map((todo) => (
+              filteredTodos.map((todo) => (
                 <li className={`todo-item${todo.completed ? ' todo-item-complete' : ''}`} key={todo.id}>
                   <span className="todo-bullet" aria-hidden="true" />
                   <label className="todo-item-label">
