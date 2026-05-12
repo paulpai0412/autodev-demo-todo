@@ -87,4 +87,37 @@ describe('Todo app shell', () => {
     expect(screen.queryByText('Temporary todo')).not.toBeInTheDocument();
     expect(screen.getByText('Your first todo will appear here.')).toBeInTheDocument();
   });
+
+  it('filters todos by all, active, and completed', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Active todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+    await user.type(screen.getByLabelText(/todo title/i), 'Completed todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    await user.click(screen.getByRole('checkbox', { name: /completed todo/i }));
+
+    // By default, All is selected, so both should be visible
+    expect(screen.getByText('Active todo')).toBeInTheDocument();
+    expect(screen.getByText('Completed todo')).toBeInTheDocument();
+
+    // Select Active filter
+    await user.click(screen.getByRole('radio', { name: /^active$/i }));
+    expect(screen.getByText('Active todo')).toBeInTheDocument();
+    expect(screen.queryByText('Completed todo')).not.toBeInTheDocument();
+    expect(screen.getByText(/1 item active/i)).toBeInTheDocument();
+
+    // Select Completed filter
+    await user.click(screen.getByRole('radio', { name: /^completed$/i }));
+    expect(screen.queryByText('Active todo')).not.toBeInTheDocument();
+    expect(screen.getByText('Completed todo')).toBeInTheDocument();
+    expect(screen.getByText(/1 item completed/i)).toBeInTheDocument();
+
+    // Select All filter
+    await user.click(screen.getByRole('radio', { name: /^all$/i }));
+    expect(screen.getByText('Active todo')).toBeInTheDocument();
+    expect(screen.getByText('Completed todo')).toBeInTheDocument();
+  });
 });
