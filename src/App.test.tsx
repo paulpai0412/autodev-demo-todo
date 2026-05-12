@@ -70,4 +70,21 @@ describe('Todo app shell', () => {
       }),
     ).toBeChecked();
   });
+
+  it('removes a todo from the list and restores empty state', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Temporary todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    expect(screen.getByText('Temporary todo')).toBeInTheDocument();
+    expect(screen.getByText(/1 item/i)).toBeInTheDocument();
+
+    const removeButton = screen.getByRole('button', { name: /remove todo/i });
+    await user.click(removeButton);
+
+    expect(screen.queryByText('Temporary todo')).not.toBeInTheDocument();
+    expect(screen.getByText('Your first todo will appear here.')).toBeInTheDocument();
+  });
 });
