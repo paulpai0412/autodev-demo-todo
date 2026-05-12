@@ -120,4 +120,53 @@ describe('Todo app shell', () => {
     expect(screen.getByText('Active todo')).toBeInTheDocument();
     expect(screen.getByText('Completed todo')).toBeInTheDocument();
   });
+
+  it('clears completed todos, updates persistence, and keeps filter counts coherent', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+
+    expect(screen.queryByRole('button', { name: /clear completed/i })).not.toBeInTheDocument();
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Keep me active');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+    await user.type(screen.getByLabelText(/todo title/i), 'Clear me');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    expect(screen.queryByRole('button', { name: /clear completed/i })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('checkbox', { name: /clear me/i }));
+
+    const clearCompletedButton = screen.getByRole('button', { name: /clear completed/i });
+    const activeFilter = screen.getByRole('radio', { name: /^active$/i });
+
+    expect(clearCompletedButton).toBeInTheDocument();
+
+    await user.click(activeFilter);
+
+    expect(screen.getByText(/1 item active/i)).toBeInTheDocument();
+
+    await user.click(clearCompletedButton);
+
+    expect(screen.queryByText('Clear me')).not.toBeInTheDocument();
+    expect(screen.getByText('Keep me active')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /clear completed/i })).not.toBeInTheDocument();
+    expect(activeFilter).toBeChecked();
+    expect(screen.getByText(/1 item active/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('radio', { name: /^completed$/i }));
+
+    expect(screen.getByText(/0 items completed/i)).toBeInTheDocument();
+    expect(screen.getByText('No completed todos found.')).toBeInTheDocument();
+
+    const storedTodos = window.localStorage.getItem('autodev-demo-todos');
+    expect(storedTodos).toContain('Keep me active');
+    expect(storedTodos).not.toContain('Clear me');
+
+    unmount();
+    render(<App />);
+
+    expect(screen.getByText('Keep me active')).toBeInTheDocument();
+    expect(screen.queryByText('Clear me')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /clear completed/i })).not.toBeInTheDocument();
+  });
 });

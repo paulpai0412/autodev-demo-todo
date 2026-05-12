@@ -65,6 +65,10 @@ function App() {
     setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
   };
 
+  const clearCompletedTodos = () => {
+    setTodos((currentTodos) => currentTodos.filter((todo) => !todo.completed));
+  };
+
   const completedCount = todos.filter((todo) => todo.completed).length;
 
   const filteredTodos = todos.filter((todo) => {
@@ -153,10 +157,15 @@ function App() {
               )}
             </span>
           </div>
+          {completedCount > 0 ? (
+            <button type="button" className="clear-completed-button" onClick={clearCompletedTodos}>
+              Clear completed
+            </button>
+          ) : null}
           <ul aria-label="Todo items" className="todo-list">
             {filteredTodos.length === 0 ? (
               <li className="todo-empty-state">
-                {filter === 'all' 
+                {filter === 'all'
                   ? 'Your first todo will appear here.'
                   : `No ${filter} todos found.`}
               </li>
