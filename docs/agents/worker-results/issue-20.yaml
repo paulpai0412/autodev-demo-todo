@@ -1,0 +1,74 @@
+schema_version: "1.0"
+kind: worker_result
+line_cap: 80
+raw_evidence_policy: index_only_refs_no_raw_logs_or_transcripts
+
+issue:
+  number: "20"
+  title: "Validate worker success requires PR metadata"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/issues/20"
+
+branch: "agent/issue-20-validate-worker-success-requires-pr-metadata"
+status: "success"
+failure_classification: {kind: "none", retryable: true, routed_to: "pr_verifier", root_cause_signature: "none"}
+
+summary:
+  objective: "Validate that issue_worker does not emit status success until PR metadata exists."
+  outcome: "Documented the consumer repo's issue-tracker contract so worker results only report success after the branch is pushed and a real PR exists with populated `pr.number` and `pr.url`, matching the already-implemented shared autodev supervisor behavior."
+
+files_changed:
+  - {path: "docs/agents/issue-tracker.md", summary: "Replaced the placeholder tracker note with concrete GitHub, PR, evidence, and worker-result contract rules for this repo."}
+  - {path: "docs/agents/worker-results/issue-20.yaml", summary: "Recorded the issue_worker delivery and self-check results for issue #20 after push and PR creation completed."}
+
+test_case_repair:
+  applies: false
+  test_case_id: ""
+  attempted_target_case: false
+  repaired_categories: ["none"]
+  failure_signature: "none"
+  assertion_changed: false
+  expected_outcome_changed: false
+
+verification:
+  note: "Worker self-checks support implementation feedback only; final acceptance comes from the verifier evidence packet."
+  gates:
+    tdd_gate: "not_applicable"
+    implementation_self_check_gate: "pass"
+    git_gate: "pass"
+  implementation_self_checks:
+    - {command: "lsp_diagnostics docs/agents/issue-tracker.md", result: "pass", evidence_ref: "docs/agents/issue-tracker.md", summary: "No diagnostics were reported for the repo-local process documentation update."}
+    - {command: "npm test", result: "pass", evidence_ref: "src/App.test.tsx", summary: "Vitest passed all 7 existing tests after the documentation-only change."}
+    - {command: "npm run test:e2e", result: "pass", evidence_ref: "playwright-report/results.json", summary: "Playwright passed both existing Chromium todo flows after the documentation-only change."}
+    - {command: "npm run build", result: "pass", evidence_ref: "dist/", summary: "TypeScript compilation and Vite production build completed successfully."}
+  final_acceptance_claim: false
+
+evidence_packet_refs:
+  worker_artifact_bundle: "playwright-report/results.json"
+  verifier_packet: ""
+  raw_evidence_policy: "stored_outside_main_agent_context"
+
+role_boundary:
+  actor_role: "issue_worker"
+  may_execute_implementation_self_checks: true
+  may_execute_final_acceptance_qa: false
+  may_emit_final_verification: false
+  verifier_packet_required_for_completion: true
+
+pr:
+  number: "21"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/pull/21"
+  ready_for_review: true
+
+blockers:
+  - "none"
+
+next_recommended_step: "Run pr_verifier against PR #21 and publish the evidence packet for issue #20."
+
+handoff:
+  repo_path: "docs/agents/handoffs/issue-20.yaml"
+  github_summary_posted: false
+
+metadata:
+  worker: "OpenCode issue_worker"
+  worker_session_id: "current-session"
+  completed_at: "2026-05-13T11:48:30+08:00"
