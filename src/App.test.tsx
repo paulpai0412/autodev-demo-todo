@@ -21,12 +21,24 @@ describe('Todo app shell', () => {
 
     render(<App />);
 
-    await user.type(screen.getByLabelText(/todo title/i), 'Ship the first tracer bullet');
-    await user.click(screen.getByRole('button', { name: /add todo/i }));
+    const input = screen.getByLabelText(/todo title/i);
+    const addButton = screen.getByRole('button', { name: /add todo/i });
+
+    expect(addButton).toBeDisabled();
+
+    await user.type(input, '   ');
+
+    expect(addButton).toBeDisabled();
+
+    await user.type(input, 'Ship the first tracer bullet   ');
+
+    expect(addButton).toBeEnabled();
+
+    await user.click(addButton);
 
     expect(screen.getByText('Ship the first tracer bullet')).toBeInTheDocument();
     expect(screen.getByText(/1 item/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/todo title/i)).toHaveValue('');
+    expect(input).toHaveValue('');
   });
 
   it('marks a todo complete from the public list flow', async () => {

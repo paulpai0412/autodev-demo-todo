@@ -32,6 +32,7 @@ function App() {
   const [draft, setDraft] = useState('');
   const [todos, setTodos] = useState<Todo[]>(() => loadTodos());
   const [filter, setFilter] = useState<FilterType>('all');
+  const canAddTodo = draft.trim().length > 0;
 
   useEffect(() => {
     window.localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify(todos));
@@ -40,7 +41,7 @@ function App() {
   const addTodo = () => {
     const nextTodo = draft.trim();
 
-    if (!nextTodo) {
+    if (!canAddTodo) {
       return;
     }
 
@@ -104,7 +105,7 @@ function App() {
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
             />
-            <button type="button" onClick={addTodo}>
+            <button type="button" onClick={addTodo} disabled={!canAddTodo}>
               Add todo
             </button>
           </div>
