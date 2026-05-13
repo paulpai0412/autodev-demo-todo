@@ -1,0 +1,52 @@
+schema_version: "1.0"
+kind: release_result
+line_cap: 60
+raw_evidence_policy: index_only_refs_no_raw_logs_or_transcripts
+
+subject:
+  issue_number: "10"
+  pr_number: "14"
+  branch: "agent/issue-10-expand-playwright-coverage-for-the-evolved-todo-flows"
+
+status: "success"
+blocked_reason: "none"
+
+summary:
+  outcome: "PR #14 merged to main (sha: 5850c578a750921ec5608a30d3f14d2a0ca10eeb). Issue #10 closed. Workspace restored to clean main."
+  next_recommended_step: "main_orchestrator: select next ready-for-agent issue or run prd_phase_completeness_audit."
+
+approval_policy:
+  merge_approval_mode: "bypass_approval"
+  human_approval_skipped: true
+  override_source: "user_requested_autodev_start"
+  override_scope: "workflow_run_only"
+
+failure_classification: {kind: "none", retryable: true, routed_to: "none", root_cause_signature: "none"}
+
+merge:
+  attempted: true
+  merged: true
+  merged_sha: "5850c578a750921ec5608a30d3f14d2a0ca10eeb"
+
+post_merge_workspace_hygiene:
+  primary_workspace_branch_before: "agent/issue-10-expand-playwright-coverage-for-the-evolved-todo-flows"
+  primary_workspace_branch_after: "main"
+  dirty_state_detected: false
+  wip_branch_created: "none"
+  stash_created: "none"
+  workspace_clean_after: true
+  issue_worktree_removed: true
+  cleanup_status: "pass"
+  blocked_reason: "none"
+
+evidence_packet_ref: "docs/agents/evidence/issue-10-pr-14.yaml"
+
+role_boundary:
+  actor_role: "release_worker"
+  may_run_final_acceptance_qa: false
+  may_merge_only_after_verifier_pass: true
+
+metadata:
+  worker: "Sisyphus release_worker (main_orchestrator direct recovery)"
+  worker_session_id: "release-recovery-direct"
+  completed_at: "2026-05-13T09:45:00+08:00"
