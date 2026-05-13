@@ -1,0 +1,27 @@
+schema_version: "1.0"
+kind: issue_handoff
+issue:
+  number: "16"
+  title: "Add compact operator note for resuming the latest autodev root session"
+  branch: "agent/issue-16-add-compact-operator-note-for-resuming-the-lates"
+acceptance_criteria_evidence:
+  - {id: "AC1", ref: "docs/agents/operator-resume-guide.md:4-6 — points operators to `.opencode/runtime/new-session-result.json` for latest root-session metadata"}
+  - {id: "AC2", ref: "docs/agents/operator-resume-guide.md:7-17 — names exact `opencode --session` reopen command from `new-session-result.json`"}
+  - {id: "AC3", ref: "docs/agents/operator-resume-guide.md:1-25 — guide remains 25 lines and contains no raw logs or transcripts"}
+  - {id: "AC4", ref: "docs/agents/operator-resume-guide.md:3 — workflow artifacts remain the primary replay surface"}
+  - {id: "AC5", ref: "README.md:32-38 — README artifact refs link to `docs/agents/operator-resume-guide.md`"}
+compact_verification_summary:
+  - "lsp_diagnostics: no issues in README.md or docs/agents/operator-resume-guide.md."
+  - "npm run build: passed after npm install in the issue worktree; Vite build completed successfully."
+  - "Static doc QA confirmed metadata path, exact reopen command, compact scope, artifact-first guidance, and README link."
+evidence_packet_refs:
+  - "evidence_packet: docs/agents/evidence/issue-16-pr-17.yaml"
+  - "worker_result: docs/agents/worker-results/issue-16.yaml"
+  - "pull_request: https://github.com/paulpai0412/autodev-demo-todo/pull/17"
+files_changed_summary:
+  - "docs/agents/operator-resume-guide.md: added compact operator-facing resume note with runtime metadata path and reopen command."
+  - "README.md: added artifact-ref link to the operator resume guide."
+  - "docs/agents/evidence/issue-16-pr-17.yaml: added verifier evidence packet."
+blockers_or_risks:
+  - "Non-blocking build warning: inherited tsconfig extend references `@tsconfig/bun/tsconfig.json`, but build exit code was 0."
+next_recommended_step: "release_worker: merge PR #17 and close issue #16."

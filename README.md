@@ -35,3 +35,4 @@ Todo demo app used as an `autodev` consumer-project tracer bullet.
 - Handoff: `docs/agents/handoffs/issue-3.yaml`
 - Playwright result index: `playwright-report/results.json`
 - Runtime checkpoint: `docs/agents/runtime/context-checkpoint.yaml`
+- Root-session resume note: `docs/agents/operator-resume-guide.md`
