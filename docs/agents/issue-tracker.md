@@ -37,3 +37,5 @@ This project uses GitHub issues and pull requests in `paulpai0412/autodev-demo-t
 - Keeping this seeded issue visible in repo-local workflow docs makes the third ready queue slot observable while earlier seeded issues are selected and processed.
 - Issue `#31` is the seeded fresh-ready restart item for the current happy-path cycle.
 - Keeping this seeded issue visible in repo-local workflow docs makes the next orchestrator restart observable from a freshly ready issue after the prior seeded cycle completes.
+- Issue `#32` is the seeded monitor continuity checkpoint item for the current seeded cycle.
+- Keeping this seeded issue visible in repo-local workflow docs makes the ready queue staying non-empty observable after the current seeded cycle completes, with issue `#33` and issue `#34` still available as the next seeded items.
