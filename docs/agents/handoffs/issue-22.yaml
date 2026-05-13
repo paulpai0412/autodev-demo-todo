@@ -1,0 +1,19 @@
+schema_version: "1.0"
+kind: issue_handoff
+issue:
+  number: "22"
+  title: "Seeded happy-path cycle monitor tail"
+  branch: "agent/issue-22-seeded-happy-path-cycle-monitor-tail"
+acceptance_criteria_evidence:
+  - {id: "AC1", ref: "docs/agents/issue-tracker.md:30-33"}
+compact_verification_summary:
+  - "npm test: 7/7 passed."
+  - "npm run build: succeeded with the existing repo tsconfig warning still non-blocking."
+evidence_packet_refs:
+  - "worker_result: docs/agents/worker-results/issue-22.yaml"
+  - "pull_request: https://github.com/paulpai0412/autodev-demo-todo/pull/25"
+files_changed_summary:
+  - "docs/agents/issue-tracker.md: added seeded queue notes for issue #22 monitor-tail visibility."
+blockers_or_risks:
+  - "Existing workspace warning: ../tsconfig.json extends @tsconfig/bun/tsconfig.json, but test/build still pass."
+next_recommended_step: "Run pr_verifier against PR #25 and publish the evidence packet for issue #22."
