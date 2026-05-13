@@ -1,0 +1,24 @@
+schema_version: "1.0"
+kind: issue_handoff
+issue:
+  number: "10"
+  title: "Expand Playwright coverage for the evolved Todo flows"
+  branch: "agent/issue-10-expand-playwright-coverage-for-the-evolved-todo-flows"
+acceptance_criteria_evidence:
+  - {id: "AC1", ref: "tests/e2e/todo.spec.ts — full-flow test covers add/complete/filter/remove/clear-completed"}
+  - {id: "AC2", ref: "tests/e2e/todo.spec.ts — reload step with 5 post-reload assertions"}
+  - {id: "AC3", ref: "playwright-report/results.json — 2 tests, 8.3s, compact list output"}
+  - {id: "AC4", ref: "git diff main...HEAD -- README.md — empty; no operator step change"}
+  - {id: "AC5", ref: "docs/agents/worker-results/issue-10.yaml + docs/agents/evidence/issue-10-pr-14.yaml"}
+compact_verification_summary:
+  - "npm run test:e2e: 2/2 passed in chromium (smoke test + full-flow test)."
+  - "npm run build: tsc + vite succeeded with 0 errors."
+evidence_packet_refs:
+  - "evidence_packet: docs/agents/evidence/issue-10-pr-14.yaml"
+  - "worker_result: docs/agents/worker-results/issue-10.yaml"
+  - "pull_request: https://github.com/paulpai0412/autodev-demo-todo/pull/14"
+files_changed_summary:
+  - "tests/e2e/todo.spec.ts: added full-flow E2E test (+55 lines); original smoke test retained."
+blockers_or_risks:
+  - "none"
+next_recommended_step: "release_worker: merge PR #14 and close issue #10."
