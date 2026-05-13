@@ -1,0 +1,52 @@
+schema_version: "1.0"
+kind: release_result
+line_cap: 60
+raw_evidence_policy: index_only_refs_no_raw_logs_or_transcripts
+
+subject:
+  issue_number: "18"
+  pr_number: "19"
+  branch: "agent/issue-18-minimal-happy-path-validation"
+
+status: "success"
+blocked_reason: "none"
+
+summary:
+  outcome: "PR #19 merged to main (sha: 6e6d89b8cddf74ab589682a39763e5681b41558e). Issue #18 is closed, release comments were posted, and workspace hygiene finished on clean main after preserving unrelated local changes in a WIP branch and stash."
+  next_recommended_step: "main_orchestrator: continue with the next ready issue in the workflow queue."
+
+approval_policy:
+  merge_approval_mode: "bypass_approval"
+  human_approval_skipped: true
+  override_source: "user_requested_autodev_start"
+  override_scope: "workflow_run_only"
+
+failure_classification: {kind: "none", retryable: true, routed_to: "none", root_cause_signature: "none"}
+
+merge:
+  attempted: true
+  merged: true
+  merged_sha: "6e6d89b8cddf74ab589682a39763e5681b41558e"
+
+post_merge_workspace_hygiene:
+  primary_workspace_branch_before: "main"
+  primary_workspace_branch_after: "main"
+  dirty_state_detected: true
+  wip_branch_created: "wip/release-worker-issue-18-premerge"
+  stash_created: "release-worker issue 18 pre-merge hygiene"
+  workspace_clean_after: true
+  issue_worktree_removed: false
+  cleanup_status: "pass"
+  blocked_reason: "none"
+
+evidence_packet_ref: "docs/agents/evidence/issue-18-pr-19.yaml"
+
+role_boundary:
+  actor_role: "release_worker"
+  may_run_final_acceptance_qa: false
+  may_merge_only_after_verifier_pass: true
+
+metadata:
+  worker: "OpenCode release_worker"
+  worker_session_id: "release-worker-issue-18"
+  completed_at: "2026-05-13T11:43:31+08:00"
