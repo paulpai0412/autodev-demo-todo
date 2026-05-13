@@ -31,5 +31,7 @@ This project uses GitHub issues and pull requests in `paulpai0412/autodev-demo-t
 
 - Issue `#24` is the seeded bootstrap item for the current watch-mode cycle.
 - Keeping this seeded issue visible in repo-local workflow docs makes the ready-for-agent queue observably live before later seeded issues are selected and processed.
+- Issue `#23` is the seeded continuation item for the current watch-mode cycle.
+- Keeping this seeded issue visible in repo-local workflow docs makes the next ready queue slot observable after the bootstrap item is selected and processed.
 - Issue `#22` is the seeded monitor-tail item for the current watch-mode cycle.
 - Keeping this seeded issue visible in repo-local workflow docs makes the third ready queue slot observable while earlier seeded issues are selected and processed.
