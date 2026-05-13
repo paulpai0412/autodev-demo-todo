@@ -1,0 +1,74 @@
+schema_version: "1.0"
+kind: worker_result
+line_cap: 80
+raw_evidence_policy: index_only_refs_no_raw_logs_or_transcripts
+
+issue:
+  number: "16"
+  title: "Add compact operator note for resuming the latest autodev root session"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/issues/16"
+
+branch: "agent/issue-16-add-compact-operator-note-for-resuming-the-lates"
+status: "success"
+failure_classification: {kind: "none", retryable: true, routed_to: "pr_verifier", root_cause_signature: "none"}
+
+summary:
+  objective: "Add a compact operator-facing note that points to the latest root-session metadata and names the exact root-session reopen command, while keeping workflow artifacts as the main replay surface."
+  outcome: "Added a compact operator resume guide under docs/agents, linked it from the README artifact refs, and kept the note focused on `.opencode/runtime/new-session-result.json` plus the `opencode --session <rootSessionID>` reopen command pattern."
+
+files_changed:
+  - {path: "docs/agents/operator-resume-guide.md", summary: "Added the compact operator-facing resume note with the metadata path and reopen command."}
+  - {path: "README.md", summary: "Linked the new operator resume note from the existing artifact reference section."}
+  - {path: "docs/agents/worker-results/issue-16.yaml", summary: "Recorded the issue_worker delivery and self-check results for issue #16."}
+
+test_case_repair:
+  applies: false
+  test_case_id: ""
+  attempted_target_case: false
+  repaired_categories: ["none"]
+  failure_signature: "none"
+  assertion_changed: false
+  expected_outcome_changed: false
+
+verification:
+  note: "Worker self-checks support implementation feedback only; final acceptance comes from the verifier evidence packet."
+  gates:
+    tdd_gate: "not_applicable"
+    implementation_self_check_gate: "pass"
+    git_gate: "pass"
+  implementation_self_checks:
+    - {command: "markdown line-count and content review", result: "pass", evidence_ref: "docs/agents/operator-resume-guide.md", summary: "Guide stayed compact, contains the metadata path, and names the root-session reopen command without adding raw logs or transcripts."}
+    - {command: "lsp_diagnostics README.md", result: "pass", evidence_ref: "README.md", summary: "README change introduced no diagnostics and added a single artifact-reference link."}
+    - {command: "lsp_diagnostics docs/agents/worker-results/issue-16.yaml", result: "pass", evidence_ref: "docs/agents/worker-results/issue-16.yaml", summary: "Worker result YAML remained structurally valid for this repo's artifact pattern."}
+  final_acceptance_claim: false
+
+evidence_packet_refs:
+  worker_artifact_bundle: "docs/agents/operator-resume-guide.md"
+  verifier_packet: ""
+  raw_evidence_policy: "stored_outside_main_agent_context"
+
+role_boundary:
+  actor_role: "issue_worker"
+  may_execute_implementation_self_checks: true
+  may_execute_final_acceptance_qa: false
+  may_emit_final_verification: false
+  verifier_packet_required_for_completion: true
+
+pr:
+  number: "17"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/pull/17"
+  ready_for_review: true
+
+blockers:
+  - "none"
+
+next_recommended_step: "Run pr_verifier against the issue-16 PR and publish the evidence packet."
+
+handoff:
+  repo_path: "docs/agents/handoffs/issue-16.yaml"
+  github_summary_posted: false
+
+metadata:
+  worker: "OpenCode issue_worker"
+  worker_session_id: "ses_1e0c96ac1ffeKgol7Lsj6Vvz6G"
+  completed_at: "2026-05-13T10:44:23+08:00"
