@@ -35,8 +35,8 @@ verification:
   final_acceptance_claim: false
 
 pr:
-  number: ""
-  url: ""
+  number: "19"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/pull/19"
   ready_for_review: true
 
 blockers:
@@ -59,9 +59,9 @@ role_boundary:
 
 handoff:
   repo_path: "docs/agents/handoffs/issue-18.yaml"
-  github_summary_posted: false
+  github_summary_posted: true
 
 metadata:
   worker: "OpenCode issue_worker"
   worker_session_id: "current-session"
-  completed_at: "2026-05-13T11:29:04+08:00"
+  completed_at: "2026-05-13T11:30:28+08:00"
