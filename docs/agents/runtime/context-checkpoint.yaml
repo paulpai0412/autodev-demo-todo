@@ -3,8 +3,8 @@ kind: context_checkpoint
 line_cap: 80
 
 subject:
-  issue_number: "4"
-  branch: "agent/issue-4-scaffold-the-todo-demo-app-and-implement-add-tod"
+  issue_number: "10"
+  branch: "agent/issue-10-expand-playwright-coverage-for-the-evolved-todo-"
   role: "main_orchestrator"
   checkpoint_reason: "standalone_autodev_bootstrap"
 
@@ -31,43 +31,45 @@ runtime_controls:
   human_approval_skipped: true
 
 state:
-  completed: []
-  in_progress:
-    - "Prepare the orchestrator session to enter issue #4 PR flow."
+  completed:
+    - "issue_worker: tests/e2e/todo.spec.ts expanded, PR #14 created and merged."
+    - "pr_verifier: evidence packet written, all 5 ACs and 4 gates pass."
+    - "release_worker: PR #14 merged (sha: 5850c578), issue #10 closed, workspace on main."
+  in_progress: []
   next:
-    - "Continue per_issue_flow for issue #4 by creating or switching the issue branch."
+    - "main_orchestrator: issue_selection_or_recovery — select next ready-for-agent issue."
   blockers:
     - "none"
 
 refs:
-  issue_packet: "/home/timmypai/apps/autodev-demo-todo/docs/agents/issue-packets/issue-4.yaml"
-  worker_result: ""
-  evidence_packet: ""
-  handoff: ""
-  artifact_bundle: ""
+  issue_packet: "docs/agents/issue-packets/issue-10.yaml"
+  worker_result: "docs/agents/worker-results/issue-10.yaml"
+  evidence_packet: "docs/agents/evidence/issue-10-pr-14.yaml"
+  handoff: "docs/agents/handoffs/issue-10.yaml"
+  artifact_bundle: "docs/agents/release-results/issue-10-pr-14.yaml"
 
 compact_payload:
-  active_target: {issue_number: "4", branch: "agent/issue-4-scaffold-the-todo-demo-app-and-implement-add-tod", role: "main_orchestrator", agent: "hephaestus", next_flow: "per_issue_flow"}
-  authoritative_refs: ["/home/timmypai/apps/autodev-demo-todo/docs/agents/issue-packets/issue-4.yaml", "/home/timmypai/apps/autodev/docs/agents/autonomous-development-workflow.yaml"]
+  active_target: {issue_number: "10", branch: "main", role: "main_orchestrator", agent: "build", next_flow: "issue_selection_or_recovery"}
+  authoritative_refs: ["docs/agents/issue-packets/issue-10.yaml", "/home/timmypai/apps/autodev/docs/agents/autonomous-development-workflow.yaml"]
   state_snapshot:
-    completed: []
-    in_progress: ["Prepare the orchestrator session to enter issue #4 PR flow."]
-    next: ["Continue per_issue_flow for issue #4 by creating or switching the issue branch."]
+    completed: ["issue_worker success", "pr_verifier pass", "release_worker success — PR #14 merged, issue #10 closed"]
+    in_progress: []
+    next: ["main_orchestrator issue_selection_or_recovery"]
     blockers: ["none"]
   resume_rules: ["Resume from checkpoint and compact payload, not full chat history.", "Keep raw evidence as refs only; do not inline logs or traces."]
-  immediate_next_action: "Continue per_issue_flow for issue #4 by creating or switching the issue branch."
+  immediate_next_action: "main_orchestrator: select next ready-for-agent issue or run prd_phase_completeness_audit."
 
 post_merge_workspace_hygiene:
-  primary_workspace_branch_before: "main"
+  primary_workspace_branch_before: "agent/issue-10-expand-playwright-coverage-for-the-evolved-todo-flows"
   primary_workspace_branch_after: "main"
   dirty_state_detected: false
   wip_branch_created: "none"
   stash_created: "none"
   workspace_clean_after: true
-  issue_worktree_removed: false
+  issue_worktree_removed: true
   cleanup_status: "pass"
   blocked_reason: "none"
 
 metadata:
-  updated_by: "Hephaestus"
-  updated_at: "2026-05-11T19:42:46+08:00"
+  updated_by: "Sisyphus release_worker (main_orchestrator direct recovery)"
+  updated_at: "2026-05-13T09:45:00+08:00"
