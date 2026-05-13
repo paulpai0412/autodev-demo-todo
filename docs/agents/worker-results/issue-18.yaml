@@ -1,0 +1,67 @@
+schema_version: "1.0"
+kind: worker_result
+line_cap: 80
+raw_evidence_policy: index_only_refs_no_raw_logs_or_transcripts
+
+issue:
+  number: "18"
+  title: "Minimal happy-path validation"
+  url: "https://github.com/paulpai0412/autodev-demo-todo/issues/18"
+
+branch: "agent/issue-18-minimal-happy-path-validation"
+status: "success"
+failure_classification: {kind: "none", retryable: true, routed_to: "pr_verifier", root_cause_signature: "none"}
+
+summary:
+  objective: "Add the smallest visible happy-path validation for the todo composer without changing unrelated flows."
+  outcome: "The Add todo action is now disabled until the draft contains non-whitespace content, and valid trimmed input still adds a todo through the existing public form flow."
+
+files_changed:
+  - {path: "src/App.tsx", summary: "Disabled the Add todo button for blank or whitespace-only drafts while preserving the existing trimmed add behavior."}
+  - {path: "src/App.test.tsx", summary: "Extended the public add-todo test to verify disabled state for blank input and enabled state for valid input."}
+  - {path: "docs/agents/worker-results/issue-18.yaml", summary: "Recorded the issue_worker delivery and self-check results for issue #18."}
+
+verification:
+  note: "Worker self-checks support implementation feedback only; final acceptance comes from the verifier evidence packet."
+  gates:
+    tdd_gate: "pass"
+    implementation_self_check_gate: "pass"
+    git_gate: "pass"
+  implementation_self_checks:
+    - {command: "npm test", result: "pass", evidence_ref: "src/App.test.tsx", summary: "Vitest passed 7 tests, including the updated public happy-path validation check."}
+    - {command: "npm run test:e2e", result: "pass", evidence_ref: "playwright-report/results.json", summary: "Existing Chromium happy-path E2E flows still passed after the composer validation change."}
+    - {command: "npm run build", result: "pass", evidence_ref: "dist/", summary: "TypeScript compilation and Vite production build succeeded."}
+    - {command: "lsp_diagnostics src/App.tsx src/App.test.tsx", result: "pass", evidence_ref: "src/App.tsx, src/App.test.tsx", summary: "No diagnostics reported for the changed source files."}
+  final_acceptance_claim: false
+
+pr:
+  number: ""
+  url: ""
+  ready_for_review: true
+
+blockers:
+  - "none"
+
+next_recommended_step: "Run pr_verifier against the issue-18 PR and publish the evidence packet."
+
+evidence_packet_refs:
+  worker_artifact_bundle: "playwright-report/results.json"
+  verifier_packet: ""
+  raw_evidence_policy: "stored_outside_main_agent_context"
+
+role_boundary:
+  actor_role: "issue_worker"
+  may_execute_implementation_self_checks: true
+  may_execute_final_acceptance_qa: false
+  may_emit_final_verification: false
+  verifier_packet_required_for_completion: true
+  proof_of_separation: true
+
+handoff:
+  repo_path: "docs/agents/handoffs/issue-18.yaml"
+  github_summary_posted: false
+
+metadata:
+  worker: "OpenCode issue_worker"
+  worker_session_id: "current-session"
+  completed_at: "2026-05-13T11:29:04+08:00"
