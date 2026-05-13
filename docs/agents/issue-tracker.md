@@ -26,3 +26,8 @@ This project uses GitHub issues and pull requests in `paulpai0412/autodev-demo-t
 - Keep repo artifacts compact and index-only.
 - Store raw logs, traces, and long transcripts outside the main agent context.
 - Use local artifact refs such as `docs/agents/worker-results/`, `docs/agents/evidence/`, and `docs/agents/handoffs/` in PR summaries.
+
+## Seeded queue notes
+
+- Issue `#22` is the seeded monitor-tail item for the current watch-mode cycle.
+- Keeping this seeded issue visible in repo-local workflow docs makes the third ready queue slot observable while earlier seeded issues are selected and processed.
