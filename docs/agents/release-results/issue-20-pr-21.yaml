@@ -1,0 +1,39 @@
+schema_version: "1.0"
+kind: release_result
+line_cap: 60
+raw_evidence_policy: index_only_refs_no_raw_logs_or_transcripts
+
+subject:
+  issue_number: "20"
+  pr_number: "21"
+  branch: "agent/issue-20-validate-worker-success-requires-pr-metadata"
+
+status: "success"
+blocked_reason: "none"
+
+summary:
+  outcome: "Verified pass evidence, merged PR #21 with squash, posted the release note to issue #20, confirmed the issue was closed, and restored the primary workspace to clean main."
+  next_recommended_step: "Return control to main_orchestrator for next issue selection or recovery."
+
+approval_policy:
+  merge_approval_mode: "bypass_approval"
+  human_approval_skipped: true
+  override_source: "workflow_start_source"
+  override_scope: "workflow_run_only"
+
+failure_classification: {kind: "none", retryable: true, routed_to: "none", root_cause_signature: "none"}
+
+merge:
+  attempted: true
+  merged: true
+  merged_sha: "9866d84f22c5d0f7c82f82454c207b07eeaa1b3e"
+
+role_boundary:
+  actor_role: "release_worker"
+  may_run_final_acceptance_qa: false
+  may_merge_only_after_verifier_pass: true
+
+metadata:
+  worker: "OpenCode release_worker"
+  worker_session_id: "current-session"
+  completed_at: "2026-05-13T11:56:41+08:00"
