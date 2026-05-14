@@ -1,0 +1,28 @@
+schema_version: "1.0"
+kind: issue_handoff
+issue:
+  number: "33"
+  title: "Add status banner with progress insights for the current todo list"
+  branch: "agent/issue-33-add-status-banner-with-progress-insights-for-the"
+acceptance_criteria_evidence:
+  - {id: "AC1", ref: "src/App.tsx:144-177"}
+  - {id: "AC2", ref: "src/App.tsx:100-103,157-175"}
+  - {id: "AC3", ref: "src/App.tsx:149-154,231-235"}
+  - {id: "AC4", ref: "src/App.tsx:44-98,100-103"}
+  - {id: "AC5", ref: "src/App.tsx:101-103,149-154,157-175"}
+compact_verification_summary:
+  - "npm test: 12/12 passed."
+  - "npm run test:e2e: 2/2 passed."
+  - "npm run build: succeeded."
+  - "lsp_diagnostics: clean for src/App.tsx, src/App.css, src/App.test.tsx, and tests/e2e/todo.spec.ts."
+evidence_packet_refs:
+  - "worker_result: docs/agents/worker-results/issue-33.yaml"
+  - "pull_request: https://github.com/paulpai0412/autodev-demo-todo/pull/35"
+files_changed_summary:
+  - "src/App.tsx: added derived progress metrics, rendered the status banner, and clarified empty-state copy."
+  - "src/App.css: added status-banner styling and responsive metric layout."
+  - "src/App.test.tsx: added banner zero-state and sync coverage across todo mutations."
+  - "tests/e2e/todo.spec.ts: verified the banner through real add, toggle, clear, remove, and reload flows."
+blockers_or_risks:
+  - "Existing unrelated worktree changes in README.md and docs/agents/runtime/context-checkpoint.yaml were left untouched."
+next_recommended_step: "Run pr_verifier against PR #35 and publish the evidence packet for issue #33."
