@@ -97,6 +97,68 @@ describe('Todo app shell', () => {
     ).toBeChecked();
   });
 
+  it('creates a todo with a due date and restores it after reload', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Ship the due date badge');
+    await user.type(screen.getByLabelText(/due date/i), '2026-05-20');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    expect(screen.getByText('Due May 20, 2026')).toBeInTheDocument();
+
+    unmount();
+    render(<App />);
+
+    expect(screen.getByText('Ship the due date badge')).toBeInTheDocument();
+    expect(screen.getByText('Due May 20, 2026')).toBeInTheDocument();
+  });
+
+  it('lets a user clear the due date before creating a todo', async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    const dueDateInput = screen.getByLabelText(/due date/i);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Keep this unscheduled');
+    await user.type(dueDateInput, '2026-05-20');
+    await user.clear(dueDateInput);
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    expect(screen.getByText('Keep this unscheduled')).toBeInTheDocument();
+    expect(screen.queryByText(/due may 20, 2026/i)).not.toBeInTheDocument();
+  });
+
+  it('highlights overdue active todos but not completed ones', () => {
+    window.localStorage.setItem(
+      'autodev-demo-todos',
+      JSON.stringify([
+        { id: 'todo-1', title: 'Past due active todo', completed: false, dueDate: '2020-01-01' },
+        { id: 'todo-2', title: 'Past due completed todo', completed: true, dueDate: '2020-01-01' },
+      ]),
+    );
+
+    render(<App />);
+
+    expect(screen.getByText('Overdue')).toBeInTheDocument();
+    expect(screen.getByText('Past due active todo').closest('.todo-item')).toHaveClass('todo-item-overdue');
+    expect(screen.getByText('Past due completed todo').closest('.todo-item')).not.toHaveClass('todo-item-overdue');
+  });
+
+  it('loads older stored todos that do not include a due date', () => {
+    window.localStorage.setItem(
+      'autodev-demo-todos',
+      JSON.stringify([{ id: 'todo-legacy', title: 'Legacy todo', completed: false }]),
+    );
+
+    render(<App />);
+
+    expect(screen.getByText('Legacy todo')).toBeInTheDocument();
+    expect(screen.queryByText(/Due Jan 1, 2020/i)).not.toBeInTheDocument();
+    expect(screen.queryByText('Overdue')).not.toBeInTheDocument();
+  });
+
   it('removes a todo from the list and restores empty state', async () => {
     const user = userEvent.setup();
     render(<App />);

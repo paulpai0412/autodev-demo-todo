@@ -6,9 +6,31 @@ type Todo = {
   id: string;
   title: string;
   completed: boolean;
+  dueDate?: string;
 };
 
 const TODOS_STORAGE_KEY = 'autodev-demo-todos';
+
+const dueDateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+const formatDueDate = (dueDate: string) => {
+  const [year, month, day] = dueDate.split('-').map(Number);
+
+  return dueDateFormatter.format(new Date(Date.UTC(year, month - 1, day)));
+};
+
+const isValidDueDate = (value: unknown): value is string =>
+  typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
+
+const isStoredTodo = (
+  todo: { id?: unknown; title?: unknown; completed?: unknown; dueDate?: unknown },
+): todo is { id?: unknown; title: string; completed: boolean; dueDate?: unknown } =>
+  typeof todo.title === 'string' && typeof todo.completed === 'boolean';
 
 const loadTodos = (): Todo[] => {
   const storedTodos = window.localStorage.getItem(TODOS_STORAGE_KEY);
@@ -18,9 +40,21 @@ const loadTodos = (): Todo[] => {
   }
 
   try {
-    const parsedTodos = JSON.parse(storedTodos) as Todo[];
+    const parsedTodos = JSON.parse(storedTodos) as Array<{
+      id?: unknown;
+      title?: unknown;
+      completed?: unknown;
+      dueDate?: unknown;
+    }>;
 
-    return parsedTodos.filter((todo) => typeof todo.title === 'string' && typeof todo.completed === 'boolean');
+    return parsedTodos
+      .filter(isStoredTodo)
+      .map((todo) => ({
+        id: typeof todo.id === 'string' ? todo.id : crypto.randomUUID(),
+        title: todo.title,
+        completed: todo.completed,
+        dueDate: isValidDueDate(todo.dueDate) ? todo.dueDate : undefined,
+      }));
   } catch {
     return [];
   }
@@ -30,6 +64,7 @@ type FilterType = 'all' | 'active' | 'completed';
 
 function App() {
   const [draft, setDraft] = useState('');
+  const [dueDateDraft, setDueDateDraft] = useState('');
   const [todos, setTodos] = useState<Todo[]>(() => loadTodos());
   const [filter, setFilter] = useState<FilterType>('all');
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
@@ -50,13 +85,15 @@ function App() {
 
     setTodos((currentTodos) => [
       ...currentTodos,
-      {
-        id: crypto.randomUUID(),
-        title: nextTodo,
-        completed: false,
-      },
-    ]);
+        {
+          id: crypto.randomUUID(),
+          title: nextTodo,
+          completed: false,
+          dueDate: dueDateDraft || undefined,
+        },
+      ]);
     setDraft('');
+    setDueDateDraft('');
   };
 
   const toggleTodo = (id: string) => {
@@ -134,6 +171,16 @@ function App() {
               placeholder="Draft the first tracer bullet"
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
+            />
+            <label className="field-label due-date-label" htmlFor="todo-due-date">
+              Due date
+            </label>
+            <input
+              id="todo-due-date"
+              name="todo-due-date"
+              type="date"
+              value={dueDateDraft}
+              onChange={(event) => setDueDateDraft(event.target.value)}
             />
             <button type="button" onClick={addTodo} disabled={!canAddTodo}>
               Add todo
@@ -237,9 +284,13 @@ function App() {
             ) : (
               filteredTodos.map((todo) => {
                 const isEditing = editingTodoId === todo.id;
+                const isOverdue = Boolean(todo.dueDate && !todo.completed && todo.dueDate < new Date().toISOString().slice(0, 10));
 
                 return (
-                  <li className={`todo-item${todo.completed ? ' todo-item-complete' : ''}`} key={todo.id}>
+                  <li
+                    className={`todo-item${todo.completed ? ' todo-item-complete' : ''}${isOverdue ? ' todo-item-overdue' : ''}`}
+                    key={todo.id}
+                  >
                     <span className="todo-bullet" aria-hidden="true" />
                     {isEditing ? (
                       <form
@@ -266,14 +317,24 @@ function App() {
                       </form>
                     ) : (
                       <>
-                        <label className="todo-item-label">
-                          <input
-                            checked={todo.completed}
-                            onChange={() => toggleTodo(todo.id)}
-                            type="checkbox"
-                          />
-                          <span>{todo.title}</span>
-                        </label>
+                        <div className="todo-item-main">
+                          <label className="todo-item-label">
+                            <input
+                              checked={todo.completed}
+                              onChange={() => toggleTodo(todo.id)}
+                              type="checkbox"
+                            />
+                            <span>{todo.title}</span>
+                          </label>
+                          {todo.dueDate ? (
+                            <div className="todo-meta">
+                              <span className={`todo-due-badge${isOverdue ? ' todo-due-badge-overdue' : ''}`}>
+                                Due {formatDueDate(todo.dueDate)}
+                              </span>
+                              {isOverdue ? <span className="todo-overdue-badge">Overdue</span> : null}
+                            </div>
+                          ) : null}
+                        </div>
                         <button
                           type="button"
                           className="todo-edit-button"
