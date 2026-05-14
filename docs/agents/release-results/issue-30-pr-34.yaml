@@ -1,0 +1,50 @@
+schema_version: "1.0"
+kind: release_result
+line_cap: 60
+raw_evidence_policy: index_only_refs_no_raw_logs_or_transcripts
+
+subject:
+  issue_number: "30"
+  pr_number: "34"
+  branch: "agent/issue-30-add-inline-edit-flow-for-existing-todos"
+
+status: "success"
+blocked_reason: "none"
+
+summary:
+  outcome: "PR #34 merged to main at cfa987c766c18e702902657df83388362ba0a0f2, issue #30 is closed, and primary workspace hygiene passed."
+  next_recommended_step: "Return control to the main_orchestrator root session for next-issue selection."
+
+approval_policy:
+  merge_approval_mode: "bypass_approval"
+  human_approval_skipped: true
+  override_source: "user_requested_autodev_start"
+  override_scope: "workflow_run_only"
+
+failure_classification: {kind: "none", retryable: false, routed_to: "none", root_cause_signature: "none"}
+
+merge:
+  attempted: true
+  merged: true
+  merged_sha: "cfa987c766c18e702902657df83388362ba0a0f2"
+
+post_merge_workspace_hygiene:
+  primary_workspace_branch_before: "agent/issue-30-add-inline-edit-flow-for-existing-todos"
+  primary_workspace_branch_after: "main"
+  dirty_state_detected: true
+  wip_branch_created: "agent/wip/post-merge-issue-30-20260514-1013"
+  stash_created: "post-merge hygiene preserve issue-30 from agent/issue-30-add-inline-edit-flow-for-existing-todos"
+  workspace_clean_after: true
+  issue_worktree_removed: false
+  cleanup_status: "pass"
+  blocked_reason: "none"
+
+role_boundary:
+  actor_role: "release_worker"
+  may_run_final_acceptance_qa: false
+  may_merge_only_after_verifier_pass: true
+
+metadata:
+  worker: "OpenCode release_worker"
+  worker_session_id: "current-session"
+  completed_at: "2026-05-14T10:13:54+08:00"
