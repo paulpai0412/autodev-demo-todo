@@ -113,4 +113,41 @@ test.describe('Todo demo', () => {
     await expect(page.getByText('Write tests')).not.toBeVisible();
     await expect(page.getByText('Deploy app')).not.toBeVisible();
   });
+
+  test('shows due-date badges, supports clearing a due date, and marks only active past-due todos overdue', async ({ page }) => {
+    const titleInput = page.getByLabel('Todo title');
+    const dueDateInput = page.getByLabel('Due date');
+    const addButton = page.getByRole('button', { name: 'Add todo' });
+
+    await titleInput.fill('Future dated todo');
+    await dueDateInput.fill('2026-05-20');
+    await addButton.click();
+
+    await expect(page.getByText('Due May 20, 2026')).toBeVisible();
+
+    await titleInput.fill('Cleared due date todo');
+    await dueDateInput.fill('2026-05-21');
+    await dueDateInput.fill('');
+    await addButton.click();
+
+    await expect(page.getByText('Cleared due date todo')).toBeVisible();
+    await expect(page.getByText('Cleared due date todo').locator('..')).not.toContainText('Due May 21, 2026');
+
+    await page.evaluate(() => {
+      window.localStorage.setItem(
+        'autodev-demo-todos',
+        JSON.stringify([
+          { id: 'todo-1', title: 'Past due active todo', completed: false, dueDate: '2020-01-01' },
+          { id: 'todo-2', title: 'Past due completed todo', completed: true, dueDate: '2020-01-01' },
+        ]),
+      );
+    });
+    await page.reload();
+
+    const activeOverdueItem = page.locator('.todo-item', { hasText: 'Past due active todo' });
+    const completedPastDueItem = page.locator('.todo-item', { hasText: 'Past due completed todo' });
+
+    await expect(activeOverdueItem).toContainText('Overdue');
+    await expect(completedPastDueItem).not.toContainText('Overdue');
+  });
 });
