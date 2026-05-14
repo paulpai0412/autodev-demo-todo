@@ -113,4 +113,45 @@ test.describe('Todo demo', () => {
     await expect(page.getByText('Write tests')).not.toBeVisible();
     await expect(page.getByText('Deploy app')).not.toBeVisible();
   });
+
+  test('bulk toggle updates only the visible todos in each filter mode', async ({ page }) => {
+    const input = page.getByLabel('Todo title');
+    const addButton = page.getByRole('button', { name: 'Add todo' });
+
+    await expect(page.getByRole('button', { name: 'Mark visible todos complete' })).toBeDisabled();
+
+    await input.fill('Alpha');
+    await addButton.click();
+    await input.fill('Beta');
+    await addButton.click();
+    await input.fill('Gamma');
+    await addButton.click();
+
+    await page.getByRole('button', { name: 'Mark visible todos complete' }).click();
+
+    await expect(page.getByRole('checkbox', { name: 'Alpha' })).toBeChecked();
+    await expect(page.getByRole('checkbox', { name: 'Beta' })).toBeChecked();
+    await expect(page.getByRole('checkbox', { name: 'Gamma' })).toBeChecked();
+    await expect(page.getByText('3 items · 3 complete')).toBeVisible();
+
+    await page.getByRole('radio', { name: 'Completed' }).check();
+    await page.getByRole('button', { name: 'Mark visible todos active' }).click();
+
+    await expect(page.getByText('No completed todos found.')).toBeVisible();
+    await expect(page.getByText('3 active todos')).toBeVisible();
+
+    await page.getByRole('radio', { name: 'All' }).check();
+    await page.getByRole('checkbox', { name: 'Alpha' }).check();
+    await page.getByRole('radio', { name: 'Active' }).check();
+    await page.getByRole('button', { name: 'Mark visible todos complete' }).click();
+
+    await expect(page.getByText('No active todos found.')).toBeVisible();
+    await expect(page.getByText('3 completed todos')).toBeVisible();
+
+    await page.reload();
+
+    await expect(page.getByRole('checkbox', { name: 'Alpha' })).toBeChecked();
+    await expect(page.getByRole('checkbox', { name: 'Beta' })).toBeChecked();
+    await expect(page.getByRole('checkbox', { name: 'Gamma' })).toBeChecked();
+  });
 });
