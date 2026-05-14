@@ -181,4 +181,78 @@ describe('Todo app shell', () => {
     expect(screen.queryByText('Clear me')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /clear completed/i })).not.toBeInTheDocument();
   });
+
+  it('switches a todo into edit mode with the current title and saves the trimmed value', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), '  Rename me later  ');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    await user.click(screen.getByRole('button', { name: /edit todo: rename me later/i }));
+
+    const editInput = screen.getByLabelText(/edit todo title for rename me later/i);
+
+    expect(editInput).toHaveValue('Rename me later');
+
+    await user.clear(editInput);
+    await user.type(editInput, '  Renamed todo  ');
+    await user.click(screen.getByRole('button', { name: /save todo: rename me later/i }));
+
+    expect(screen.getByText('Renamed todo')).toBeInTheDocument();
+    expect(screen.queryByText('Rename me later')).not.toBeInTheDocument();
+  });
+
+  it('cancels edit mode without changing the todo title', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Keep original title');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    await user.click(screen.getByRole('button', { name: /edit todo: keep original title/i }));
+
+    const editInput = screen.getByLabelText(/edit todo title for keep original title/i);
+    await user.clear(editInput);
+    await user.type(editInput, 'Changed but cancelled');
+    await user.click(screen.getByRole('button', { name: /cancel edit for keep original title/i }));
+
+    expect(screen.getByText('Keep original title')).toBeInTheDocument();
+    expect(screen.queryByText('Changed but cancelled')).not.toBeInTheDocument();
+  });
+
+  it('blocks saving an empty edited title and preserves completion state after rename and reload', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Persist edited todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    const todoToggle = screen.getByRole('checkbox', { name: /persist edited todo/i });
+    await user.click(todoToggle);
+    expect(todoToggle).toBeChecked();
+
+    await user.click(screen.getByRole('button', { name: /edit todo: persist edited todo/i }));
+
+    const editInput = screen.getByLabelText(/edit todo title for persist edited todo/i);
+    const saveButton = screen.getByRole('button', { name: /save todo: persist edited todo/i });
+
+    await user.clear(editInput);
+    await user.type(editInput, '   ');
+
+    expect(saveButton).toBeDisabled();
+
+    await user.clear(editInput);
+    await user.type(editInput, '  Persisted edited todo  ');
+    await user.click(saveButton);
+
+    expect(screen.getByText('Persisted edited todo')).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /persisted edited todo/i })).toBeChecked();
+
+    unmount();
+    render(<App />);
+
+    expect(screen.getByText('Persisted edited todo')).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /persisted edited todo/i })).toBeChecked();
+  });
 });

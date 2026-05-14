@@ -138,6 +138,14 @@ h1 {
   background: rgba(15, 23, 42, 0.72);
 }
 
+.todo-bullet {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #38bdf8, #22d3ee);
+  box-shadow: 0 0 0 0.3rem rgba(34, 211, 238, 0.12);
+}
+
 .todo-item-label {
   display: flex;
   align-items: center;
@@ -153,6 +161,56 @@ h1 {
 
 .todo-item-label span {
   flex: 1;
+}
+
+.todo-edit-form {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.todo-edit-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.todo-edit-form input {
+  min-width: 0;
+  border: 1px solid rgba(56, 189, 248, 0.55);
+  border-radius: 999px;
+  padding: 0.65rem 0.85rem;
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+}
+
+.todo-edit-form button,
+.todo-edit-button {
+  border: 1px solid rgba(248, 250, 252, 0.18);
+  border-radius: 999px;
+  padding: 0.6rem 0.85rem;
+  background: rgba(15, 23, 42, 0.72);
+  color: #f8fafc;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.todo-edit-form button:hover,
+.todo-edit-button:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #38bdf8;
+}
+
+.todo-edit-form button:disabled {
+  color: #64748b;
+  cursor: not-allowed;
 }
 
 .todo-item-complete .todo-item-label span {
@@ -192,16 +250,12 @@ h1 {
   margin-top: 0.75rem;
 }
 
-.todo-bullet {
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #38bdf8, #22d3ee);
-  box-shadow: 0 0 0 0.3rem rgba(34, 211, 238, 0.12);
-}
-
 @media (max-width: 640px) {
   .composer-row {
+    grid-template-columns: 1fr;
+  }
+
+  .todo-edit-form {
     grid-template-columns: 1fr;
   }
 }

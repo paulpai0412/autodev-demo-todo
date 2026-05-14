@@ -32,7 +32,10 @@ function App() {
   const [draft, setDraft] = useState('');
   const [todos, setTodos] = useState<Todo[]>(() => loadTodos());
   const [filter, setFilter] = useState<FilterType>('all');
+  const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState('');
   const canAddTodo = draft.trim().length > 0;
+  const canSaveEditedTodo = editingTitle.trim().length > 0;
 
   useEffect(() => {
     window.localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify(todos));
@@ -64,6 +67,30 @@ function App() {
 
   const removeTodo = (id: string) => {
     setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
+  };
+
+  const startEditingTodo = (todo: Todo) => {
+    setEditingTodoId(todo.id);
+    setEditingTitle(todo.title);
+  };
+
+  const saveEditedTodo = (id: string) => {
+    const nextTitle = editingTitle.trim();
+
+    if (!nextTitle) {
+      return;
+    }
+
+    setTodos((currentTodos) =>
+      currentTodos.map((todo) => (todo.id === id ? { ...todo, title: nextTitle } : todo)),
+    );
+    setEditingTodoId(null);
+    setEditingTitle('');
+  };
+
+  const cancelEditingTodo = () => {
+    setEditingTodoId(null);
+    setEditingTitle('');
   };
 
   const clearCompletedTodos = () => {
@@ -171,28 +198,67 @@ function App() {
                   : `No ${filter} todos found.`}
               </li>
             ) : (
-              filteredTodos.map((todo) => (
-                <li className={`todo-item${todo.completed ? ' todo-item-complete' : ''}`} key={todo.id}>
-                  <span className="todo-bullet" aria-hidden="true" />
-                  <label className="todo-item-label">
-                    <input
-                      checked={todo.completed}
-                      onChange={() => toggleTodo(todo.id)}
-                      type="checkbox"
-                    />
-                    <span>{todo.title}</span>
-                  </label>
-                  <button 
-                    type="button" 
-                    className="todo-remove-button" 
-                    onClick={() => removeTodo(todo.id)}
-                    aria-label={`Remove todo: ${todo.title}`}
-                    title="Remove todo"
-                  >
-                    ×
-                  </button>
-                </li>
-              ))
+              filteredTodos.map((todo) => {
+                const isEditing = editingTodoId === todo.id;
+
+                return (
+                  <li className={`todo-item${todo.completed ? ' todo-item-complete' : ''}`} key={todo.id}>
+                    <span className="todo-bullet" aria-hidden="true" />
+                    {isEditing ? (
+                      <form
+                        className="todo-edit-form"
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          saveEditedTodo(todo.id);
+                        }}
+                      >
+                        <label className="todo-edit-label" htmlFor={`todo-edit-${todo.id}`}>
+                          Edit todo title for {todo.title}
+                        </label>
+                        <input
+                          id={`todo-edit-${todo.id}`}
+                          value={editingTitle}
+                          onChange={(event) => setEditingTitle(event.target.value)}
+                        />
+                        <button type="submit" disabled={!canSaveEditedTodo} aria-label={`Save todo: ${todo.title}`}>
+                          Save
+                        </button>
+                        <button type="button" onClick={cancelEditingTodo} aria-label={`Cancel edit for ${todo.title}`}>
+                          Cancel
+                        </button>
+                      </form>
+                    ) : (
+                      <>
+                        <label className="todo-item-label">
+                          <input
+                            checked={todo.completed}
+                            onChange={() => toggleTodo(todo.id)}
+                            type="checkbox"
+                          />
+                          <span>{todo.title}</span>
+                        </label>
+                        <button
+                          type="button"
+                          className="todo-edit-button"
+                          onClick={() => startEditingTodo(todo)}
+                          aria-label={`Edit todo: ${todo.title}`}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          className="todo-remove-button"
+                          onClick={() => removeTodo(todo.id)}
+                          aria-label={`Remove todo: ${todo.title}`}
+                          title="Remove todo"
+                        >
+                          ×
+                        </button>
+                      </>
+                    )}
+                  </li>
+                );
+              })
             )}
           </ul>
         </section>
