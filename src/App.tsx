@@ -98,6 +98,9 @@ function App() {
   };
 
   const completedCount = todos.filter((todo) => todo.completed).length;
+  const totalCount = todos.length;
+  const activeCount = totalCount - completedCount;
+  const completionPercent = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 
   const filteredTodos = todos.filter((todo) => {
     if (filter === 'active') return !todo.completed;
@@ -139,6 +142,40 @@ function App() {
         </form>
 
         <section className="todo-list-section" aria-labelledby="todo-list-heading">
+          <section className="status-banner" aria-label="Todo progress summary">
+            <div className="status-banner-copy">
+              <p className="status-banner-label">Status banner</p>
+              <div>
+                <strong>{completionPercent}% complete</strong>
+                <p>
+                  {totalCount === 0
+                    ? 'Add your first todo to start moving progress above 0%.'
+                    : `${completedCount} of ${totalCount} todos completed so far.`}
+                </p>
+              </div>
+            </div>
+            <dl className="status-banner-metrics">
+              <div>
+                <dt>Total todos</dt>
+                <dd>
+                  {totalCount} total todo{totalCount === 1 ? '' : 's'}
+                </dd>
+              </div>
+              <div>
+                <dt>Active todos</dt>
+                <dd>
+                  {activeCount} active todo{activeCount === 1 ? '' : 's'}
+                </dd>
+              </div>
+              <div>
+                <dt>Completed todos</dt>
+                <dd>
+                  {completedCount} completed todo{completedCount === 1 ? '' : 's'}
+                </dd>
+              </div>
+            </dl>
+          </section>
+
           <div className="list-header">
             <h2 id="todo-list-heading">Current list</h2>
             <div className="filter-controls" role="radiogroup" aria-label="Todo filters">
@@ -194,7 +231,7 @@ function App() {
             {filteredTodos.length === 0 ? (
               <li className="todo-empty-state">
                 {filter === 'all'
-                  ? 'Your first todo will appear here.'
+                  ? 'Your first todo will appear here once you add it.'
                   : `No ${filter} todos found.`}
               </li>
             ) : (
