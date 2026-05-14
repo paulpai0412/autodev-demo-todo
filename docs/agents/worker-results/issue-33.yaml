@@ -50,7 +50,7 @@ verification:
 
 evidence_packet_refs:
   worker_artifact_bundle: "docs/agents/worker-results/issue-33.yaml"
-  verifier_packet: "docs/agents/evidence/issue-33-pr-35.yaml"
+  verifier_packet: ""
   raw_evidence_policy: "stored_outside_main_agent_context"
 
 role_boundary:
