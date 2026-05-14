@@ -8,6 +8,8 @@ type Todo = {
   completed: boolean;
 };
 
+type FilterType = 'all' | 'active' | 'completed';
+
 const TODOS_STORAGE_KEY = 'autodev-demo-todos';
 
 const loadTodos = (): Todo[] => {
@@ -26,7 +28,11 @@ const loadTodos = (): Todo[] => {
   }
 };
 
-type FilterType = 'all' | 'active' | 'completed';
+const matchesFilter = (todo: Todo, filter: FilterType) => {
+  if (filter === 'active') return !todo.completed;
+  if (filter === 'completed') return todo.completed;
+  return true;
+};
 
 function App() {
   const [draft, setDraft] = useState('');
@@ -63,6 +69,23 @@ function App() {
     setTodos((currentTodos) =>
       currentTodos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)),
     );
+  };
+
+  const toggleVisibleTodos = () => {
+    setTodos((currentTodos) => {
+      const visibleTodos = currentTodos.filter((todo) => matchesFilter(todo, filter));
+
+      if (visibleTodos.length === 0) {
+        return currentTodos;
+      }
+
+      const shouldMarkComplete = visibleTodos.some((todo) => !todo.completed);
+      const visibleTodoIds = new Set(visibleTodos.map((todo) => todo.id));
+
+      return currentTodos.map((todo) =>
+        visibleTodoIds.has(todo.id) ? { ...todo, completed: shouldMarkComplete } : todo,
+      );
+    });
   };
 
   const removeTodo = (id: string) => {
@@ -102,11 +125,9 @@ function App() {
   const activeCount = totalCount - completedCount;
   const completionPercent = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 
-  const filteredTodos = todos.filter((todo) => {
-    if (filter === 'active') return !todo.completed;
-    if (filter === 'completed') return todo.completed;
-    return true;
-  });
+  const filteredTodos = todos.filter((todo) => matchesFilter(todo, filter));
+  const allVisibleCompleted = filteredTodos.length > 0 && filteredTodos.every((todo) => todo.completed);
+  const bulkToggleLabel = allVisibleCompleted ? 'Mark visible todos active' : 'Mark visible todos complete';
 
   return (
     <main className="app-shell">
@@ -178,6 +199,14 @@ function App() {
 
           <div className="list-header">
             <h2 id="todo-list-heading">Current list</h2>
+            <button
+              type="button"
+              className="bulk-toggle-button"
+              onClick={toggleVisibleTodos}
+              disabled={filteredTodos.length === 0}
+            >
+              {bulkToggleLabel}
+            </button>
             <div className="filter-controls" role="radiogroup" aria-label="Todo filters">
               <label>
                 <input

@@ -196,6 +196,73 @@ describe('Todo app shell', () => {
     expect(screen.queryByRole('button', { name: /clear completed/i })).not.toBeInTheDocument();
   });
 
+  it('disables the bulk toggle button when there are no visible todos', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const bulkToggleButton = screen.getByRole('button', { name: /mark visible todos complete/i });
+
+    expect(bulkToggleButton).toBeDisabled();
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Completed todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+    await user.click(screen.getByRole('checkbox', { name: /completed todo/i }));
+    await user.click(screen.getByRole('radio', { name: /^active$/i }));
+
+    expect(bulkToggleButton).toBeDisabled();
+    expect(screen.getByText('No active todos found.')).toBeInTheDocument();
+  });
+
+  it('bulk toggles only visible todos in all, active, and completed filters and persists the updates', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'First todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+    await user.type(screen.getByLabelText(/todo title/i), 'Second todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+    await user.type(screen.getByLabelText(/todo title/i), 'Third todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    const bulkToggleButton = screen.getByRole('button', { name: /mark visible todos complete/i });
+
+    await user.click(bulkToggleButton);
+
+    expect(screen.getByRole('checkbox', { name: /first todo/i })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: /second todo/i })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: /third todo/i })).toBeChecked();
+    expect(screen.getByText(/3 items · 3 complete/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 active todos/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('radio', { name: /^completed$/i }));
+    await user.click(screen.getByRole('button', { name: /mark visible todos active/i }));
+
+    expect(screen.getByText('No completed todos found.')).toBeInTheDocument();
+    expect(screen.getByText(/0 items completed/i)).toBeInTheDocument();
+    expect(screen.getByText(/3 active todos/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('radio', { name: /^all$/i }));
+    await user.click(screen.getByRole('checkbox', { name: /first todo/i }));
+    await user.click(screen.getByRole('radio', { name: /^active$/i }));
+    await user.click(screen.getByRole('button', { name: /mark visible todos complete/i }));
+
+    expect(screen.queryByText('Second todo')).not.toBeInTheDocument();
+    expect(screen.queryByText('Third todo')).not.toBeInTheDocument();
+    expect(screen.getByText(/0 items active/i)).toBeInTheDocument();
+    expect(screen.getByText(/3 completed todos/i)).toBeInTheDocument();
+
+    const storedTodos = window.localStorage.getItem('autodev-demo-todos');
+    expect(storedTodos).toContain('First todo');
+    expect(storedTodos).toContain('"completed":true');
+
+    unmount();
+    render(<App />);
+
+    expect(screen.getByRole('checkbox', { name: /first todo/i })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: /second todo/i })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: /third todo/i })).toBeChecked();
+  });
+
   it('switches a todo into edit mode with the current title and saves the trimmed value', async () => {
     const user = userEvent.setup();
     render(<App />);

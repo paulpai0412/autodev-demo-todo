@@ -144,6 +144,7 @@ h1 {
 
 .list-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
@@ -158,6 +159,7 @@ h1 {
   font-size: 0.9rem;
 }
 
+.bulk-toggle-button,
 .clear-completed-button {
   margin-top: 1rem;
   border: 1px solid rgba(248, 250, 252, 0.18);
@@ -169,9 +171,21 @@ h1 {
   cursor: pointer;
 }
 
+.bulk-toggle-button:hover,
 .clear-completed-button:hover {
   border-color: rgba(56, 189, 248, 0.5);
   color: #38bdf8;
+}
+
+.bulk-toggle-button:disabled,
+.clear-completed-button:disabled,
+.todo-edit-form button:disabled {
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.clear-completed-button {
+  margin-right: 0.75rem;
 }
 
 .todo-list {
@@ -264,11 +278,6 @@ h1 {
 .todo-edit-button:hover {
   border-color: rgba(56, 189, 248, 0.5);
   color: #38bdf8;
-}
-
-.todo-edit-form button:disabled {
-  color: #64748b;
-  cursor: not-allowed;
 }
 
 .todo-item-complete .todo-item-label span {
