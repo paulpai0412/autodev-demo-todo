@@ -10,6 +10,11 @@ test.describe('Todo demo', () => {
   });
 
   test('adds todos, marks one complete, and keeps state after reload', async ({ page }) => {
+    await expect(page.getByText('0% complete')).toBeVisible();
+    await expect(page.getByText('0 total todos')).toBeVisible();
+    await expect(page.getByText('0 active todos')).toBeVisible();
+    await expect(page.getByText('0 completed todos')).toBeVisible();
+
     const input = page.getByLabel('Todo title');
 
     await input.fill('Add Playwright verification');
@@ -17,18 +22,26 @@ test.describe('Todo demo', () => {
 
     await expect(page.getByText('Add Playwright verification')).toBeVisible();
     await expect(page.getByText('1 item · 0 complete')).toBeVisible();
+    await expect(page.getByText('0% complete')).toBeVisible();
+    await expect(page.getByText('1 total todo')).toBeVisible();
+    await expect(page.getByText('1 active todo')).toBeVisible();
+    await expect(page.getByText('0 completed todos')).toBeVisible();
 
     const todoToggle = page.getByRole('checkbox', { name: 'Add Playwright verification' });
     await todoToggle.check();
 
     await expect(todoToggle).toBeChecked();
     await expect(page.getByText('1 item · 1 complete')).toBeVisible();
+    await expect(page.getByText('100% complete')).toBeVisible();
+    await expect(page.getByText('0 active todos')).toBeVisible();
+    await expect(page.getByText('1 completed todo')).toBeVisible();
 
     await page.reload();
 
     await expect(page.getByText('Add Playwright verification')).toBeVisible();
     await expect(page.getByRole('checkbox', { name: 'Add Playwright verification' })).toBeChecked();
     await expect(page.getByText('1 item · 1 complete')).toBeVisible();
+    await expect(page.getByText('100% complete')).toBeVisible();
   });
 
   test('full flow: add, complete, filter, remove, clear-completed, reload persists', async ({ page }) => {
@@ -44,10 +57,17 @@ test.describe('Todo demo', () => {
     await addBtn.click();
 
     await expect(page.getByText('3 items · 0 complete')).toBeVisible();
+    await expect(page.getByText('0% complete')).toBeVisible();
+    await expect(page.getByText('3 total todos')).toBeVisible();
+    await expect(page.getByText('3 active todos')).toBeVisible();
+    await expect(page.getByText('0 completed todos')).toBeVisible();
 
     // Complete one todo
     await page.getByRole('checkbox', { name: 'Write tests' }).check();
     await expect(page.getByText('3 items · 1 complete')).toBeVisible();
+    await expect(page.getByText('33% complete')).toBeVisible();
+    await expect(page.getByText('2 active todos')).toBeVisible();
+    await expect(page.getByText('1 completed todo')).toBeVisible();
 
     // Filter: Active — should show 2 active todos, hide the completed one
     await page.getByRole('radio', { name: 'Active' }).check();
@@ -70,18 +90,26 @@ test.describe('Todo demo', () => {
     await page.getByRole('button', { name: 'Remove todo: Deploy app' }).click();
     await expect(page.getByText('Deploy app')).not.toBeVisible();
     await expect(page.getByText('2 items · 1 complete')).toBeVisible();
+    await expect(page.getByText('50% complete')).toBeVisible();
+    await expect(page.getByText('2 total todos')).toBeVisible();
+    await expect(page.getByText('1 active todo')).toBeVisible();
 
     // Clear completed — removes "Write tests", leaves "Buy groceries"
     await page.getByRole('button', { name: 'Clear completed' }).click();
     await expect(page.getByText('Write tests')).not.toBeVisible();
     await expect(page.getByText('Buy groceries')).toBeVisible();
     await expect(page.getByText('1 item · 0 complete')).toBeVisible();
+    await expect(page.getByText('0% complete')).toBeVisible();
+    await expect(page.getByText('1 total todo')).toBeVisible();
+    await expect(page.getByText('1 active todo')).toBeVisible();
+    await expect(page.getByText('0 completed todos')).toBeVisible();
 
     // Reload confirms persisted state: only "Buy groceries" remains, active
     await page.reload();
     await expect(page.getByText('Buy groceries')).toBeVisible();
     await expect(page.getByRole('checkbox', { name: 'Buy groceries' })).not.toBeChecked();
     await expect(page.getByText('1 item · 0 complete')).toBeVisible();
+    await expect(page.getByText('0% complete')).toBeVisible();
     await expect(page.getByText('Write tests')).not.toBeVisible();
     await expect(page.getByText('Deploy app')).not.toBeVisible();
   });

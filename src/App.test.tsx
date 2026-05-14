@@ -13,7 +13,21 @@ describe('Todo app shell', () => {
     expect(screen.getByRole('heading', { name: /todo flow/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/todo title/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /add todo/i })).toBeInTheDocument();
+    expect(screen.getByText(/0% complete/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 total todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 active todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 completed todos/i)).toBeInTheDocument();
     expect(screen.getByRole('list', { name: /todo items/i })).toBeInTheDocument();
+  });
+
+  it('shows zero progress in the status banner and empty state when there are no todos', () => {
+    render(<App />);
+
+    expect(screen.getByText(/0% complete/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 total todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 active todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 completed todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/add your first todo to start moving progress above 0%/i)).toBeInTheDocument();
   });
 
   it('adds a todo from the public form flow', async () => {
@@ -97,7 +111,7 @@ describe('Todo app shell', () => {
     await user.click(removeButton);
 
     expect(screen.queryByText('Temporary todo')).not.toBeInTheDocument();
-    expect(screen.getByText('Your first todo will appear here.')).toBeInTheDocument();
+    expect(screen.getByText('Your first todo will appear here once you add it.')).toBeInTheDocument();
   });
 
   it('filters todos by all, active, and completed', async () => {
@@ -254,5 +268,56 @@ describe('Todo app shell', () => {
 
     expect(screen.getByText('Persisted edited todo')).toBeInTheDocument();
     expect(screen.getByRole('checkbox', { name: /persisted edited todo/i })).toBeChecked();
+  });
+
+  it('keeps the status banner in sync across add, edit, toggle, delete, and clear flows', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(screen.getByLabelText(/todo title/i), 'First todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    expect(screen.getByText(/0% complete/i)).toBeInTheDocument();
+    expect(screen.getByText(/1 total todo/i)).toBeInTheDocument();
+    expect(screen.getByText(/1 active todo/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 completed todos/i)).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText(/todo title/i), 'Second todo');
+    await user.click(screen.getByRole('button', { name: /add todo/i }));
+
+    expect(screen.getByText(/0% complete/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 total todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 active todos/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /edit todo: second todo/i }));
+    const editInput = screen.getByLabelText(/edit todo title for second todo/i);
+    await user.clear(editInput);
+    await user.type(editInput, 'Renamed second todo');
+    await user.click(screen.getByRole('button', { name: /save todo: second todo/i }));
+
+    expect(screen.getByText(/2 total todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 active todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 completed todos/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('checkbox', { name: /first todo/i }));
+
+    expect(screen.getByText(/50% complete/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 total todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/1 active todo/i)).toBeInTheDocument();
+    expect(screen.getByText(/1 completed todo/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /remove todo: renamed second todo/i }));
+
+    expect(screen.getByText(/100% complete/i)).toBeInTheDocument();
+    expect(screen.getByText(/1 total todo/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 active todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/1 completed todo/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /clear completed/i }));
+
+    expect(screen.getByText(/0% complete/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 total todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 active todos/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 completed todos/i)).toBeInTheDocument();
   });
 });
